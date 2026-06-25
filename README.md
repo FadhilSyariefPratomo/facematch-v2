@@ -4,7 +4,7 @@ Aplikasi web interaktif berbasis Streamlit untuk membandingkan tingkat kemiripan
 
 Aplikasi ini menggunakan model yang telah dilatih (*pre-trained*) `pca_model.pkl` dari dataset **LFW (6.562 foto, 1.680 identitas, k=100)**. Pengguna **tidak perlu** melakukan *training* apa pun dan dapat langsung menggunakan aplikasi.
 
-### Fitur Unggulan (v2.0)
+### ✨ Fitur Unggulan (v2.0)
 * **Neo-Brutalism UI:** Antarmuka grid yang modern, interaktif, dan responsif.
 * **Real-time Preview:** Pratinjau *bounding box* wajah seketika setelah foto diunggah menggunakan *session state caching* agar performa tetap ringan.
 * **Robust Low-Res Detection:** Dilengkapi dengan *CLAHE (Contrast Limited Adaptive Histogram Equalization)* dan *Dynamic Upscaling* interpolasi kubik untuk mengoptimalkan pembacaan foto arsip beresolusi rendah.
@@ -12,23 +12,43 @@ Aplikasi ini menggunakan model yang telah dilatih (*pre-trained*) `pca_model.pkl
 
 ---
 
-## Cara Menjalankan Secara Lokal
+## 🚀 Cara Menjalankan Secara Lokal
 
-### 1. Install dependensi
+Disarankan untuk menggunakan *Virtual Environment* agar dependensi pustaka tidak bentrok dengan proyek Python lainnya di komputer Anda.
+
+### 1. Buat Virtual Environment (Opsional tapi sangat disarankan)
+Buka terminal di dalam folder proyek, lalu jalankan:
+```bash
+python -m venv venv
+```
+
+### 2. Aktifkan Virtual Environment
+* **Windows:**
+  ```bash
+  venv\Scripts\activate
+  ```
+* **Mac/Linux:**
+  ```bash
+  source venv/bin/activate
+  ```
+*(Pastikan muncul indikator `(venv)` di sebelah kiri input terminal Anda).*
+
+### 3. Install Dependensi
+Setelah environment aktif, instal semua pustaka yang dibutuhkan:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Jalankan aplikasi
+### 4. Jalankan Aplikasi
 ```bash
 streamlit run app.py
 ```
 
-Buka browser di `http://localhost:8501`
+Aplikasi akan otomatis terbuka di browser melalui alamat `http://localhost:8501`.
 
 ---
 
-## Struktur File
+## 🗂️ Struktur File
 
 ```text
 facematch-v2/
@@ -43,7 +63,7 @@ facematch-v2/
 
 ---
 
-## Cara Penggunaan
+## 🧩 Cara Penggunaan
 
 1. Upload **Foto Masa Lalu** di panel kiri.
 2. Upload **Foto Sekarang** di panel kanan.
@@ -69,10 +89,10 @@ Oleh karena itu, hasil persentase kemiripan lintas usia ini bersifat **indikatif
 
 ---
 
-## Panduan Deploy ke Streamlit Community Cloud
+## 🛠️ Panduan Deploy ke Streamlit Community Cloud
 
 1. Buat *repository* GitHub baru dengan visibilitas *Public*.
-2. Unggah **semua file** (termasuk `pca_model.pkl`) ke dalam *repository* tersebut. Pastikan folder *Virtual Environment* (seperti `venv_facematch`) tidak ikut terunggah dengan menggunakan file `.gitignore`.
+2. Unggah **semua file** (termasuk `pca_model.pkl`) ke dalam *repository* tersebut. Pastikan folder *Virtual Environment* (seperti `venv`) tidak ikut terunggah dengan menggunakan file `.gitignore`.
 3. Buka [share.streamlit.io](https://share.streamlit.io) dan masuk menggunakan akun GitHub.
 4. Klik **New app** → pilih *repository* → atur *main file path* ke `app.py`.
 5. Klik **Deploy** dan tunggu proses instalasi dependensi selesai.
