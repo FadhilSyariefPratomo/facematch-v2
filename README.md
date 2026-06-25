@@ -1,16 +1,18 @@
-# 🧬 FaceMatch — Bandingkan Foto Lama vs Sekarang
+# 🧬 FaceMatch — Analisis Identitas Wajah Geometris
 
-Aplikasi web sederhana berbasis Streamlit untuk membandingkan dua foto wajah
-(foto lama/masa kecil vs foto sekarang) menggunakan **PCA/Eigenfaces**,
-**Cosine Similarity**, dan **Euclidean Distance**.
+Aplikasi web interaktif berbasis Streamlit untuk membandingkan tingkat kemiripan dua foto wajah (misal: arsip masa kecil vs. foto saat ini) menggunakan algoritma **Principal Component Analysis (PCA/Eigenfaces)**.
 
-Model PCA sudah dilatih sebelumnya (`pca_model.pkl`) dari dataset
-**LFW (6.562 foto, 1.680 identitas, k=100)** — pengguna **tidak perlu**
-melakukan training apa pun.
+Aplikasi ini menggunakan model yang telah dilatih (*pre-trained*) `pca_model.pkl` dari dataset **LFW (6.562 foto, 1.680 identitas, k=100)**. Pengguna **tidak perlu** melakukan *training* apa pun dan dapat langsung menggunakan aplikasi.
+
+### Fitur Unggulan (v2.0)
+* **Neo-Brutalism UI:** Antarmuka grid yang modern, interaktif, dan responsif.
+* **Real-time Preview:** Pratinjau *bounding box* wajah seketika setelah foto diunggah menggunakan *session state caching* agar performa tetap ringan.
+* **Robust Low-Res Detection:** Dilengkapi dengan *CLAHE (Contrast Limited Adaptive Histogram Equalization)* dan *Dynamic Upscaling* interpolasi kubik untuk mengoptimalkan pembacaan foto arsip beresolusi rendah.
+* **Dual Metrics:** Mengkombinasikan *Cosine Similarity* (sudut orientasi fitur) dan *Euclidean Distance* (deviasi jarak absolut) untuk akurasi yang lebih ketat.
 
 ---
 
-## 🚀 Cara Menjalankan
+## Cara Menjalankan Secara Lokal
 
 ### 1. Install dependensi
 ```bash
@@ -26,55 +28,51 @@ Buka browser di `http://localhost:8501`
 
 ---
 
-## 🗂️ Struktur File
+## Struktur File
 
-```
-facematch_v2/
-├── app.py            ← Aplikasi utama
+```text
+facematch-v2/
+├── app.py            ← Aplikasi utama (Streamlit UI & Logic)
 ├── pca_model.pkl     ← Model PCA siap pakai (WAJIB ADA)
-├── requirements.txt  ← Dependensi Python
-├── packages.txt      ← Dependensi sistem (untuk deploy)
-└── README.md         ← Panduan ini
+├── requirements.txt  ← Daftar dependensi pustaka Python
+├── packages.txt      ← Dependensi sistem OS (untuk keperluan deploy)
+└── README.md         ← Panduan proyek
 ```
 
-⚠️ **Jangan hapus atau pindahkan `pca_model.pkl`** — aplikasi tidak akan
-berjalan tanpa file ini.
+⚠️ **PENTING:** Jangan hapus atau pindahkan `pca_model.pkl` — sistem komputasi matriks tidak akan berjalan tanpa *file* ini.
 
 ---
 
-## 🧩 Cara Pakai
+## Cara Penggunaan
 
-1. Upload **Foto Lama** (foto masa kecil/lama)
-2. Upload **Foto Sekarang** (foto terbaru)
-3. Klik **Bandingkan Wajah**
-4. Lihat hasil:
-   - **Cosine Similarity** ≥ 0.80 → indikasi mirip
-   - **Euclidean Distance** ≤ 15.0 → indikasi mirip
-   - Jika **kedua metode sepakat**, sistem memberi kesimpulan akhir
-   - Jika hasil berbeda, sistem menandai sebagai "Tidak Konsisten"
+1. Upload **Foto Masa Lalu** di panel kiri.
+2. Upload **Foto Sekarang** di panel kanan.
+3. Pastikan indikator pratinjau menunjukkan **✓ DETEKSI WAJAH**.
+4. (Opsional) Sesuaikan nilai ambang batas pada **Parameter Interaktif**:
+   * **Cosine Similarity** (Target default: ≥ 0.70)
+   * **Euclidean Distance** (Target default: ≤ 15.0)
+5. Klik tombol **MULAI ANALISIS WAJAH ⚡**.
+6. Sistem akan mengekstrak ciri geometris dan memproyeksikannya ke dalam Ruang PCA untuk memberikan *Global Similarity Score*. Jika hasil metrik saling bertentangan, sistem akan melabelinya sebagai "Hasil Konflik".
 
-Threshold dapat diubah di bagian **Pengaturan Lanjutan**.
-
----
-
-## ⚠️ Keterbatasan
-
-Metode PCA/Eigenfaces sensitif terhadap:
-- Perubahan struktur wajah karena pertumbuhan (anak → dewasa)
-- Sudut wajah, pencahayaan, ekspresi
-- Wajah yang belum di-*align*
-
-Untuk perbandingan foto anak-anak vs dewasa, hasil bersifat **indikatif**,
-bukan keputusan final. Ini sesuai dengan keterbatasan teoritis PCA yang
-dijelaskan pada dokumen panduan.
+*(Catatan: Menggeser slider parameter setelah hasil muncul akan memperbarui kalkulasi persentase secara real-time tanpa perlu menekan tombol ulang).*
 
 ---
 
-## 🛠️ Deploy ke Streamlit Community Cloud
+## ⚠️ Keterbatasan Sistem (Metode Holistik)
 
-1. Buat repository GitHub baru (public)
-2. Upload **semua file** di folder ini (termasuk `pca_model.pkl`)
-3. Buka [share.streamlit.io](https://share.streamlit.io) → Sign in with GitHub
-4. New app → pilih repo → main file `app.py` → Deploy
+Metode PCA/Eigenfaces membaca distribusi intensitas piksel secara holistik, sehingga memiliki sensitivitas tinggi terhadap:
+* Perubahan ekstrem pada struktur rahang dan tengkorak akibat pertumbuhan usia yang terlalu jauh (misal: balita ke dewasa).
+* Pose atau sudut wajah yang tidak menghadap lurus ke depan (*frontal*).
+* Perbedaan pencahayaan asimetris yang terlalu kontras antara bayangan terang dan gelap.
 
-`pca_model.pkl` ukurannya ~8 MB, aman untuk diupload ke GitHub.
+Oleh karena itu, hasil persentase kemiripan lintas usia ini bersifat **indikatif statistika**, bukan sebagai keputusan forensik atau identifikasi biometrik final yang sah.
+
+---
+
+## Panduan Deploy ke Streamlit Community Cloud
+
+1. Buat *repository* GitHub baru dengan visibilitas *Public*.
+2. Unggah **semua file** (termasuk `pca_model.pkl`) ke dalam *repository* tersebut. Pastikan folder *Virtual Environment* (seperti `venv_facematch`) tidak ikut terunggah dengan menggunakan file `.gitignore`.
+3. Buka [share.streamlit.io](https://share.streamlit.io) dan masuk menggunakan akun GitHub.
+4. Klik **New app** → pilih *repository* → atur *main file path* ke `app.py`.
+5. Klik **Deploy** dan tunggu proses instalasi dependensi selesai.
